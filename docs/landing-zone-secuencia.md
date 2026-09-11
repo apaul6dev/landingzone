@@ -42,10 +42,10 @@ Ejemplos equivalentes:
 
 Ambas arquitecturas utilizan un hub de conectividad para controlar el tráfico entre:
 
-- red corporativa o on-premise,
 - internet,
 - workloads internos,
-- servicios compartidos.
+- servicios compartidos,
+- clientes y usuarios externos.
 
 En ambos casos se incorpora un componente de inspección de tráfico, firewall o control de egress/ingress para centralizar la seguridad de la red.
 

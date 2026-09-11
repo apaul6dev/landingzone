@@ -74,42 +74,35 @@ graph TD
 
 ```mermaid
 graph LR
-    subgraph External ["Entorno Externo / On-Premise"]
-        OnPrem["On-Premises Data Center / Remote VPN"]
-        Internet["Internet / Public Clients"]
-    end
+    Internet["Internet / Public Clients"]
 
     subgraph HubNetwork ["Hub / Connectivity Account & Subscription"]
         direction TB
-        TGW_vWAN["Transit Router<br/>(AWS TGW / Azure vWAN)"]
-        Firewall["Central Firewall & Inspection<br/>(AWS Network FW / Azure Firewall)"]
+        TGW_vWAN["Transit Router<br/>(Azure vWAN)"]
+        Firewall["Central Firewall & Inspection<br/>(Azure Firewall)"]
     end
 
     subgraph Spokes ["Workloads / Landing Zone Subscriptions"]
-        SpokeProd["Spoke VPC/VNet<br/>(Production App)"]
-        SpokeDev["Spoke VPC/VNet<br/>(Development App)"]
+        SpokeProd["Spoke VNet<br/>(Production App)"]
+        SpokeDev["Spoke VNet<br/>(Development App)"]
     end
 
     %% Flow Connections
-    OnPrem <-->|VPN / DirectConnect / ExpressRoute| TGW_vWAN
     Internet <-->|Ingress / Egress WAF| Firewall
-    
     TGW_vWAN <-->|All Traffic Inspection| Firewall
-    
     TGW_vWAN <-->|Peering / Attachment| SpokeProd
     TGW_vWAN <-->|Peering / Attachment| SpokeDev
 ```
 
 ### Explicación del diagrama de conectividad
 
-- Entorno externo / On-Premise: representa la red corporativa o centros de datos remotos que se conectan a la nube mediante VPN, Direct Connect o ExpressRoute.
-- Internet / Public Clients: representa clientes públicos o usuarios externos que acceden a servicios expuestos.
+- Internet / Public Clients: representa usuarios externos y clientes que acceden a servicios expuestos en la nube.
 - Hub / Connectivity Account & Subscription: es la capa central de conectividad, donde se concentra el tráfico de entrada y salida a la nube.
-- Transit Router (AWS TGW / Azure vWAN): actúa como el componente central de interconexión entre redes y workloads. Coordina el tránsito entre las redes de la organización.
+- Transit Router (Azure vWAN): actúa como el componente central de interconexión entre redes y workloads. Coordina el tránsito entre las redes de la organización.
 - Central Firewall & Inspection: es el punto de inspección de tráfico. Permite aplicar seguridad, filtrado, inspección y control para todo el tráfico antes de llegar a los spokes.
 - Workloads / Landing Zone Subscriptions: son los spoke networks o subredes que contienen las aplicaciones productivas y de desarrollo.
-- Spoke VPC/VNet (Production App): representa la red de la aplicación en producción conectada al hub para acceder a servicios internos y públicos.
-- Spoke VPC/VNet (Development App): representa el entorno de desarrollo con conectividad al hub, pero con políticas y aislamiento adecuadas.
+- Spoke VNet (Production App): representa la red de la aplicación en producción conectada al hub para acceder a servicios internos y públicos.
+- Spoke VNet (Development App): representa el entorno de desarrollo con conectividad al hub, pero con políticas y aislamiento adecuadas.
 
 ## Explicación por componente del diagrama
 
